@@ -10,8 +10,20 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.FSDirectory;
 
+/**
+ * Simple file indexer class.
+ * 
+ * @author Jules Jay Paulynice
+ *
+ */
 public class SimpleFileIndexer {
     
+	/**
+	 * Main class
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
     public static void main(String[] args) throws Exception {
         
         File indexDir = new File("C:/index/");

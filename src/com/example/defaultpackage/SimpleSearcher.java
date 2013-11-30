@@ -13,8 +13,20 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+/**
+ * Simple searcher class
+ * 
+ * @author Jules Jay Paulynice
+ *
+ */
 public class SimpleSearcher {
     
+	/**
+	 * Main class
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
     public static void main(String[] args) throws Exception {
         
         File indexDir = new File("c:/index/");
