@@ -22,7 +22,7 @@ import org.apache.lucene.util.Version;
 public class SimpleSearcher {
     
 	/**
-	 * Main class
+	 * Main method
 	 * 
 	 * @param args
 	 * @throws Exception
@@ -38,6 +38,13 @@ public class SimpleSearcher {
         
     }
     
+    /**
+     * 
+     * @param indexDir
+     * @param queryStr
+     * @param maxHits
+     * @throws Exception
+     */
     private void searchIndex(File indexDir, String queryStr, int maxHits) 
             throws Exception {
         
@@ -56,6 +63,7 @@ public class SimpleSearcher {
             Document d = searcher.doc(docId);
             System.out.println(d.get("filename"));
         }
+        searcher.close();
         
         System.out.println("Found " + hits.length);
         

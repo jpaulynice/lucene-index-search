@@ -19,7 +19,7 @@ import org.apache.lucene.store.FSDirectory;
 public class SimpleFileIndexer {
     
 	/**
-	 * Main class
+	 * Main method
 	 * 
 	 * @param args
 	 * @throws Exception
@@ -38,6 +38,14 @@ public class SimpleFileIndexer {
         
     }
     
+    /**
+     * 
+     * @param indexDir
+     * @param dataDir
+     * @param suffix
+     * @return
+     * @throws Exception
+     */
     private int index(File indexDir, File dataDir, String suffix) throws Exception {
         
         IndexWriter indexWriter = new IndexWriter(
@@ -57,6 +65,13 @@ public class SimpleFileIndexer {
         
     }
     
+    /**
+     * 
+     * @param indexWriter
+     * @param dataDir
+     * @param suffix
+     * @throws IOException
+     */
     private void indexDirectory(IndexWriter indexWriter, File dataDir, 
            String suffix) throws IOException {
 
@@ -73,6 +88,13 @@ public class SimpleFileIndexer {
 
     }
     
+    /**
+     * 
+     * @param indexWriter
+     * @param f
+     * @param suffix
+     * @throws IOException
+     */
     private void indexFileWithIndexWriter(IndexWriter indexWriter, File f, 
             String suffix) throws IOException {
 
