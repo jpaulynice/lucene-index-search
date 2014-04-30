@@ -4,11 +4,17 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 /**
  * Simple file indexer class.
@@ -26,19 +32,19 @@ public class SimpleFileIndexer {
 	 */
     public static void main(String[] args) throws Exception {
         
-        File indexDir = new File("C:/index/");
-        File dataDir = new File("C:/dev/");
+    	Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
+        File dataDir = new File("/Users/julespaulynice/Documents/workspace");
         String suffix = "java";
         
         SimpleFileIndexer indexer = new SimpleFileIndexer();
         
-        int numIndex = indexer.index(indexDir, dataDir, suffix);
+        int numIndex = indexer.index(directory, dataDir, suffix);
         
         System.out.println("Total files indexed " + numIndex);
-        
     }
     
     /**
+     * Method to index a directory by passing the directory to index, location to store the index, and word endings.
      * 
      * @param indexDir
      * @param dataDir
@@ -46,19 +52,14 @@ public class SimpleFileIndexer {
      * @return
      * @throws Exception
      */
-    private int index(File indexDir, File dataDir, String suffix) throws Exception {
-        
-        IndexWriter indexWriter = new IndexWriter(
-                FSDirectory.open(indexDir), 
-                new SimpleAnalyzer(),
-                true,
-                IndexWriter.MaxFieldLength.LIMITED);
-        indexWriter.setUseCompoundFile(false);
-        
+    private int index(Directory indexDir, File dataDir, String suffix) throws Exception {
+      
+    	StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_47);
+    	IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_47, analyzer);
+    	IndexWriter indexWriter = new IndexWriter(indexDir, config);       
         indexDirectory(indexWriter, dataDir, suffix);
         
         int numIndexed = indexWriter.maxDoc();
-        indexWriter.optimize();
         indexWriter.close();
         
         return numIndexed;
@@ -66,6 +67,7 @@ public class SimpleFileIndexer {
     }
     
     /**
+     * Method to index a directory recursively.
      * 
      * @param indexWriter
      * @param dataDir
@@ -89,6 +91,7 @@ public class SimpleFileIndexer {
     }
     
     /**
+     * Index a file by creating a Document and adding fields
      * 
      * @param indexWriter
      * @param f
@@ -104,15 +107,13 @@ public class SimpleFileIndexer {
         if (suffix!=null && !f.getName().endsWith(suffix)) {
             return;
         }
-        System.out.println("Indexing file " + f.getCanonicalPath());
+        System.out.println("Indexing file " + f.getName());
         
         Document doc = new Document();
-        doc.add(new Field("contents", new FileReader(f)));        
-        doc.add(new Field("filename", f.getCanonicalPath(), 
-           Field.Store.YES, Field.Index.ANALYZED));
+        doc.add(new Field("contents", new FileReader(f),TextField.TYPE_NOT_STORED));        
+        doc.add(new StringField("filepath", f.getCanonicalPath(), Field.Store.YES));
+        doc.add(new StringField("filename", f.getName(), Field.Store.YES));
         
         indexWriter.addDocument(doc);
-
     }
-
 }

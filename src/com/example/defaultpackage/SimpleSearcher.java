@@ -2,13 +2,13 @@ package com.example.defaultpackage;
 
 import java.io.File;
 
-import org.apache.lucene.analysis.SimpleAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -29,44 +29,40 @@ public class SimpleSearcher {
 	 */
     public static void main(String[] args) throws Exception {
         
-        File indexDir = new File("c:/index/");
-        String query = "lucene";
+        File indexDir = new File("/Users/julespaulynice/Documents/search/index");
+    	Directory directory = FSDirectory.open(indexDir);
+
+        String query = "java";
         int hits = 100;
         
         SimpleSearcher searcher = new SimpleSearcher();
-        searcher.searchIndex(indexDir, query, hits);
+        searcher.searchIndex(directory, query, hits);
         
     }
     
     /**
+     * Search a given index for the search term and return maxHits results.
      * 
      * @param indexDir
      * @param queryStr
      * @param maxHits
      * @throws Exception
      */
-    private void searchIndex(File indexDir, String queryStr, int maxHits) 
+    private void searchIndex(Directory indexDir, String queryStr, int maxHits) 
             throws Exception {
+    	DirectoryReader ireader = DirectoryReader.open(indexDir);
+	    IndexSearcher searcher = new IndexSearcher(ireader);
+	    QueryParser parser = new QueryParser(Version.LUCENE_47, "contents", new StandardAnalyzer(Version.LUCENE_47));
+	    
+	    Query query = parser.parse(queryStr);
+	    ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
         
-        Directory directory = FSDirectory.open(indexDir);
-
-        IndexSearcher searcher = new IndexSearcher(directory);
-        QueryParser parser = new QueryParser(Version.LUCENE_30, 
-             "contents", new SimpleAnalyzer());
-        Query query = parser.parse(queryStr);
-        
-        TopDocs topDocs = searcher.search(query, maxHits);
-        
-        ScoreDoc[] hits = topDocs.scoreDocs;
         for (int i = 0; i < hits.length; i++) {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
             System.out.println(d.get("filename"));
         }
-        searcher.close();
         
         System.out.println("Found " + hits.length);
-        
     }
-
 }
