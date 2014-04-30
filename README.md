@@ -8,7 +8,7 @@ This is a simple lucene index and search example.  There are 2 classes:
 
 In order to make this work, download and put these jars on the classpath:
 
-1. <a href="http://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser/lucene-queryparser.4.7.2.jar">lucene-queryparser4.7.2.jar</a>
+1. <a href="http://mvnrepository.com/artifact/org.apache.lucene/lucene-queryparser/lucene-queryparser-4.7.2.jar">lucene-queryparser4.7.2.jar</a>
 2. <a href="http://repo1.maven.org/maven2/org/apache/lucene/lucene-core/4.7.2/lucene-core-4.7.2.jar">lucene-core-4.7.2.jar</a>
 3.  <a href="http://repo1.maven.org/maven2/org/apache/lucene/lucene-analyzers-common/4.7.2/lucene-analyzers-common-4.7.2.jar">lucene-analyzers-common-4.7.2.jar</a>
 
