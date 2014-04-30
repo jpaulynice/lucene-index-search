@@ -1,4 +1,4 @@
-package com.example.defaultpackage;
+package com.search.indexer;
 
 import java.io.File;
 import java.io.FileReader;
