@@ -52,8 +52,7 @@ public class SimpleSearcher {
 			throws Exception {
 		DirectoryReader ireader = DirectoryReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(ireader);
-		QueryParser parser = new QueryParser(Version.LUCENE_47, "contents",
-				new StandardAnalyzer(Version.LUCENE_47));
+		QueryParser parser = new QueryParser(Version.LUCENE_47, "contents",new StandardAnalyzer(Version.LUCENE_47));
 
 		Query query = parser.parse(queryStr);
 		ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
