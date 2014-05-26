@@ -12,12 +12,6 @@ In order to make this work, download and put these jars on the classpath:
 2. <a href="http://repo1.maven.org/maven2/org/apache/lucene/lucene-core/4.7.2/lucene-core-4.7.2.jar">lucene-core-4.7.2.jar</a>
 3.  <a href="http://repo1.maven.org/maven2/org/apache/lucene/lucene-analyzers-common/4.7.2/lucene-analyzers-common-4.7.2.jar">lucene-analyzers-common-4.7.2.jar</a>
 4.  Change SimpleFileIndexer.java to specify a temp directory to store index and directory to index
-    <pre>
-    	//change to a temp directory to store the index i.e: c://temp/index
-	Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
-	//change to directory you want to index for search
-	File dataDir = new File("/Users/julespaulynice/Documents/workspace");
-    </pre>
 5.  Change SimpleSearcher.java to specify index directory to search.
 
 Currently, the application is set to index files ending in ".java" which can be changed in the main method of SimpleFileIndexer.java
