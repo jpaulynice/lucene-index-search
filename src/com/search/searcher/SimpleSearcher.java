@@ -29,6 +29,7 @@ public class SimpleSearcher {
 	 */
 	public static void main(String[] args) throws Exception {
 
+		//change to the index directory created from SimpleFileIndexer.java
 		File indexDir = new File("/Users/julespaulynice/Documents/search/index");
 		Directory directory = FSDirectory.open(indexDir);
 

@@ -13,7 +13,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 
 /**
@@ -32,7 +31,9 @@ public class SimpleFileIndexer {
 	 */
 	public static void main(String[] args) throws Exception {
 
+		//change to a temp directory to store the index i.e: c://temp/index
 		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
+		//change to directory you want to index for search
 		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
 		String suffix = "java";
 
