@@ -13,6 +13,7 @@ In order to make this work, download and put these jars on the classpath:
 3.  <a href="http://repo1.maven.org/maven2/org/apache/lucene/lucene-analyzers-common/4.7.2/lucene-analyzers-common-4.7.2.jar">lucene-analyzers-common-4.7.2.jar</a>
   
 Finally:
+
 1.  Change main method of SimpleFileIndexer.java to specify a temp directory to store index and directory to index
     <pre>
 		//change to a temp directory to store the index i.e: c://temp/index
