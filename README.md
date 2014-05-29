@@ -15,16 +15,10 @@ In order to make this work, download and put these jars on the classpath:
 Finally:
 1.  Change main method of SimpleFileIndexer.java to specify a temp directory to store index and directory to index
     <pre>
-	public static void main(String[] args) throws Exception {
 		//change to a temp directory to store the index i.e: c://temp/index
 		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
 		//change to directory you want to index for search
 		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
-		String suffix = "java";
-		SimpleFileIndexer indexer = new SimpleFileIndexer();
-		int numIndex = indexer.index(directory, dataDir, suffix);
-		System.out.println("Total files indexed " + numIndex);
-	}
     </pre>
 2.  Change SimpleSearcher.java to specify index directory to search.
 
