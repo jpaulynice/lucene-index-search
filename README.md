@@ -21,7 +21,12 @@ Finally:
 		//change to directory you want to index for search
 		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
     </pre>
-2.  Change SimpleSearcher.java to specify index directory to search.
+2.  Change SimpleSearcher.java to specify index directory to search:
+   <pre>
+		//change to the index directory created from SimpleFileIndexer.java
+		File indexDir = new File("/Users/julespaulynice/Documents/search/index");
+		Directory directory = FSDirectory.open(indexDir);
+   </pre>
 
 Currently, the application is set to index files ending in ".java" which can be changed in the main method of SimpleFileIndexer.java
 Several indexing files are then created.  Then using SimpleSearcher class, we search for "lucene" and list the file paths that match our query.
