@@ -14,12 +14,12 @@ In order to make this work, download and put these jars on the classpath:
   
 Finally:
 1.  Change SimpleFileIndexer.java to specify a temp directory to store index and directory to index
-    <code>
+    <pre>
 		  //change to a temp directory to store the index i.e: c://temp/index
   		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
 		  //change to directory you want to index for search
 		  File dataDir = new File("/Users/julespaulynice/Documents/workspace");
-    </code>
+    </pre>
 2.  Change SimpleSearcher.java to specify index directory to search.
 
 Currently, the application is set to index files ending in ".java" which can be changed in the main method of SimpleFileIndexer.java
