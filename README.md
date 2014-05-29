@@ -21,7 +21,7 @@ Finally:
 		//change to directory you want to index for search
 		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
     </pre>
-2.  Change SimpleSearcher.java to specify index directory to search:
+2.  Change main method of SimpleSearcher.java to specify index directory to search:
    <pre>
 		//change to the index directory created from SimpleFileIndexer.java
 		File indexDir = new File("/Users/julespaulynice/Documents/search/index");
