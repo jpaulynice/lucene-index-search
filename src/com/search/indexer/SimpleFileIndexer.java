@@ -3,6 +3,13 @@ package com.search.indexer;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.Date;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -109,12 +116,22 @@ public class SimpleFileIndexer {
 		if (suffix != null && !f.getName().endsWith(suffix)) {
 			return;
 		}
-		System.out.println("Indexing file " + f.getName());
+		System.out.println("Indexing file " + f.getCanonicalPath());
 
 		Document doc = new Document();
 		doc.add(new Field("contents", new FileReader(f),TextField.TYPE_NOT_STORED));
 		doc.add(new StringField("filepath", f.getCanonicalPath(),Field.Store.YES));
 		doc.add(new StringField("filename", f.getName(), Field.Store.YES));
+		
+		Path path = Paths.get(f.getCanonicalPath());
+		UserPrincipal owner = Files.getOwner(path);
+		String username = owner.getName();
+		
+		FileTime time = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
+		Date date = new Date(time.toMillis());
+		
+		doc.add(new StringField("author", username, Field.Store.YES));
+		doc.add(new StringField("date", date.toString(), Field.Store.YES));
 
 		indexWriter.addDocument(doc);
 	}
