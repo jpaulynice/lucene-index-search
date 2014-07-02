@@ -7,8 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.UserPrincipal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -126,12 +128,12 @@ public class SimpleFileIndexer {
 		Path path = Paths.get(f.getCanonicalPath());
 		UserPrincipal owner = Files.getOwner(path);
 		String username = owner.getName();
-		
-		FileTime time = Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS);
-		Date date = new Date(time.toMillis());
+		BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
 		
 		doc.add(new StringField("author", username, Field.Store.YES));
-		doc.add(new StringField("date", date.toString(), Field.Store.YES));
+		doc.add(new StringField("lastModified", new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format((attr.lastModifiedTime().toMillis())), Field.Store.YES));
+		doc.add(new StringField("size", String.valueOf(attr.size()), Field.Store.YES));
+		doc.add(new StringField("created", new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format((attr.creationTime().toMillis())), Field.Store.YES));
 
 		indexWriter.addDocument(doc);
 	}
