@@ -1,4 +1,4 @@
-package com.search.searcher;
+package com.search.searcher.impl;
 
 import java.io.File;
 
@@ -13,33 +13,15 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import com.search.searcher.FileSearcher;
+
 /**
  * Simple searcher class
  * 
  * @author Jules Jay Paulynice
  * 
  */
-public class SimpleSearcher {
-
-	/**
-	 * Main method
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-
-		//change to the index directory created from SimpleFileIndexer.java
-		File indexDir = new File("/Users/julespaulynice/Documents/search/index");
-		Directory directory = FSDirectory.open(indexDir);
-
-		String query = "java";
-		int hits = 100;
-
-		SimpleSearcher searcher = new SimpleSearcher();
-		searcher.searchIndex(directory, query, hits);
-
-	}
+public class FileSearcherImpl implements FileSearcher{
 
 	/**
 	 * Search a given index for the search term and return maxHits results.
@@ -49,7 +31,8 @@ public class SimpleSearcher {
 	 * @param maxHits
 	 * @throws Exception
 	 */
-	private void searchIndex(Directory indexDir, String queryStr, int maxHits)
+	@Override
+	public void searchIndex(Directory indexDir, String queryStr, int maxHits)
 			throws Exception {
 		DirectoryReader ireader = DirectoryReader.open(indexDir);
 		IndexSearcher searcher = new IndexSearcher(ireader);

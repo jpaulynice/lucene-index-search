@@ -1,4 +1,4 @@
-package com.search.indexer;
+package com.search.indexer.impl;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,33 +24,18 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+import com.search.indexer.FileIndexer;
+
 /**
  * Simple file indexer class.
  * 
  * @author Jules Jay Paulynice
  * 
  */
-public class SimpleFileIndexer {
-
-	/**
-	 * Main method
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception {
-
-		//change to a temp directory to store the index i.e: c://temp/index
-		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
-		//change to directory you want to index for search
-		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
-		String suffix = "java";
-
-		SimpleFileIndexer indexer = new SimpleFileIndexer();
-
-		int numIndex = indexer.index(directory, dataDir, suffix);
-
-		System.out.println("Total files indexed " + numIndex);
+public class FileIndexerImpl implements FileIndexer{
+	
+	public FileIndexerImpl(){
+		
 	}
 
 	/**
@@ -63,7 +48,8 @@ public class SimpleFileIndexer {
 	 * @return
 	 * @throws Exception
 	 */
-	private int index(Directory indexDir, File dataDir, String suffix)
+	@Override
+	public int index(Directory indexDir, File dataDir, String suffix)
 			throws Exception {
 
 		StandardAnalyzer analyzer = new StandardAnalyzer(Version.LUCENE_47);
