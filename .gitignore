@@ -4,5 +4,3 @@
 *.war
 *.ear
 /bin
-*.classpath
-*.project
