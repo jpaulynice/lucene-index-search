@@ -4,14 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.UserPrincipal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -21,15 +18,14 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import com.search.indexer.FileIndexer;
 
 /**
- * Simple file indexer class.
+ * FileIndexer implementation.
  * 
- * @author Jules Jay Paulynice
+ * @author Jay Paulynice
  * 
  */
 public class FileIndexerImpl implements FileIndexer{
@@ -76,15 +72,13 @@ public class FileIndexerImpl implements FileIndexer{
 			String suffix) throws IOException {
 
 		File[] files = dataDir.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			File f = files[i];
+		for(File f: files){
 			if (f.isDirectory()) {
 				indexDirectory(indexWriter, f, suffix);
 			} else {
 				indexFileWithIndexWriter(indexWriter, f, suffix);
-			}
+			}	
 		}
-
 	}
 
 	/**
@@ -104,6 +98,7 @@ public class FileIndexerImpl implements FileIndexer{
 		if (suffix != null && !f.getName().endsWith(suffix)) {
 			return;
 		}
+		
 		System.out.println("Indexing file " + f.getCanonicalPath());
 
 		Document doc = new Document();
@@ -120,6 +115,10 @@ public class FileIndexerImpl implements FileIndexer{
 		doc.add(new StringField("lastModified", new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format((attr.lastModifiedTime().toMillis())), Field.Store.YES));
 		doc.add(new StringField("size", String.valueOf(attr.size()), Field.Store.YES));
 		doc.add(new StringField("created", new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format((attr.creationTime().toMillis())), Field.Store.YES));
+		int start = f.getName().lastIndexOf(".");
+		String docType = f.getName().substring(start+1);
+		
+		doc.add(new StringField("doctype", docType, Field.Store.YES));
 
 		indexWriter.addDocument(doc);
 	}

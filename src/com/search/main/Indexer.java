@@ -1,4 +1,4 @@
-package com.search.app;
+package com.search.main;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ public class Indexer {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/search/index"));
+		Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/luna/index"));
 		File dataDir = new File("/Users/julespaulynice/Documents/workspace");
 		String suffix = "java";
 

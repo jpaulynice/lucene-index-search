@@ -1,4 +1,4 @@
-package com.search.app;
+package com.search.main;
 
 import java.io.File;
 
@@ -18,10 +18,10 @@ public class Searcher {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		File indexDir = new File("/Users/julespaulynice/Documents/search/index");
+		File indexDir = new File("/Users/julespaulynice/Documents/luna/index");
 		Directory directory = FSDirectory.open(indexDir);
 
-		String query = "java";
+		String query = "lucene";
 		int hits = 100;
 
 		FileSearcher searcher = new FileSearcherImpl();
