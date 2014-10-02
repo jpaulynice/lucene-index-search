@@ -7,7 +7,9 @@ Currently, the application is set to index files ending in "java" which can be c
 ```java
 public static void main(String[] args) throws Exception {
 	//lucene index directory
-	Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/luna/index"));
+	Directory directory = FSDirectory.open(
+				new File("/Users/julespaulynice/Documents/luna/index")
+				);
 	
 	//directory to index
 	File dataDir = new File("/Users/julespaulynice/Documents/workspace");
