@@ -4,7 +4,7 @@ Lucene-Index-Search-Example
 This is a simple example of how to use apache lucene to index and search a directory.
 
 Currently, the application is set to index files ending in "java" which can be changed in the main method of Indexer.java
-<pre>
+```java
 public static void main(String[] args) throws Exception {
 	//lucene index directory
 	Directory directory = FSDirectory.open(new File("/Users/julespaulynice/Documents/luna/index"));
@@ -21,12 +21,11 @@ public static void main(String[] args) throws Exception {
 
 	System.out.println("Total files indexed " + numIndex);
 }
-</pre>
 
 Several indexing files are then created.  
 
 Then using Searcher.java class, we search for "lucene" and list the file paths that match our query.
-<pre>
+
 public static void main(String[] args) throws Exception {
 	//lucene index directory
 	File indexDir = new File("/Users/julespaulynice/Documents/luna/index");
@@ -41,4 +40,3 @@ public static void main(String[] args) throws Exception {
 	FileSearcher searcher = new FileSearcherImpl();
 	searcher.searchIndex(directory, query, hits);
 }
-</pre>
