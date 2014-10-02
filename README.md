@@ -21,11 +21,13 @@ public static void main(String[] args) throws Exception {
 
 	System.out.println("Total files indexed " + numIndex);
 }
+```
 
 Several indexing files are then created.  
 
 Then using Searcher.java class, we search for "lucene" and list the file paths that match our query.
 
+```java
 public static void main(String[] args) throws Exception {
 	//lucene index directory
 	File indexDir = new File("/Users/julespaulynice/Documents/luna/index");
@@ -40,3 +42,4 @@ public static void main(String[] args) throws Exception {
 	FileSearcher searcher = new FileSearcherImpl();
 	searcher.searchIndex(directory, query, hits);
 }
+```
