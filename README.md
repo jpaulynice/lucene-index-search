@@ -7,7 +7,7 @@ Currently, the application is set to index files ending in "java" which can be c
 ```java
 public static void main(String[] args) throws Exception {
 	//specify where lucene index directory is created
-	File luceneDir = new File("/Users/julespaulynice/Documents/luna/index");
+	File luceneDir = new File("/tmp/lucene-index");
 	Directory directory = FSDirectory.open(luceneDir);
 	
 	//directory to index
@@ -17,21 +17,19 @@ public static void main(String[] args) throws Exception {
 	String suffix = "java";
 
 	FileIndexer indexer = new FileIndexerImpl();
-
+	
 	int numIndex = indexer.index(directory, dataDir, suffix);
 
 	System.out.println("Total files indexed " + numIndex);
 }
 ```
 
-Several indexing files are then created.  
-
-Then using Searcher.java class, we search for "lucene" and list the file paths that match our query.
+Then using we search for "lucene" and list the file paths that match our query.
 
 ```java
 public static void main(String[] args) throws Exception {
 	//specify lucene index directory to search
-	File indexDir = new File("/Users/julespaulynice/Documents/luna/index");
+	File indexDir = new File("/tmp/lucene-index");
 	Directory directory = FSDirectory.open(indexDir);
 
 	//query string
