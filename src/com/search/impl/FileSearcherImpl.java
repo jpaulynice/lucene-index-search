@@ -21,7 +21,7 @@ public class FileSearcherImpl implements FileSearcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -35,6 +35,15 @@ public class FileSearcherImpl implements FileSearcher {
         ireader.close();
     }
 
+    /**
+     * Search the index for given query and return only specified top hits.
+     *
+     * @param searcher
+     * @param queryStr
+     * @param maxHits
+     * @throws IOException
+     * @throws ParseException
+     */
     private void searchIndex(final IndexSearcher searcher,
             final String queryStr, final int maxHits) throws IOException,
             ParseException {
