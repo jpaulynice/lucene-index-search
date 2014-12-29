@@ -22,8 +22,7 @@ public class Indexer {
         final String suffix = "java";
 
         final FileIndexer indexer = new FileIndexerImpl();
-        final int numIndex = indexer.index(dirToIndex, suffix);
-        System.out.println("Total files indexed " + numIndex);
+        indexer.index(dirToIndex, suffix);
     }
 }
 ```
