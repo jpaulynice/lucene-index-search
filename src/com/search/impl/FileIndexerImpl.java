@@ -18,6 +18,8 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.search.FileIndexer;
 
@@ -28,9 +30,12 @@ import com.search.FileIndexer;
  *
  */
 public class FileIndexerImpl implements FileIndexer {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");
     private static final Version VERSION = Version.LUCENE_47;
+    private static final IndexWriterConfig CONFIG = new IndexWriterConfig(
+            VERSION, new StandardAnalyzer(VERSION));
 
     /*
      * (non-Javadoc)
@@ -38,19 +43,15 @@ public class FileIndexerImpl implements FileIndexer {
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
-    public int index(final String dirToIndex, final String suffix)
+    public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        final IndexWriterConfig config = new IndexWriterConfig(VERSION,
-                new StandardAnalyzer(VERSION));
-        final IndexWriter indexWriter = new IndexWriter(Utils.getIndexDir(),
-                config);
+        final IndexWriter iWriter = new IndexWriter(Utils.getIndexDir(), CONFIG);
         final File dataDir = new File(dirToIndex);
 
-        indexDirectory(indexWriter, dataDir, suffix);
-        final int numIndexed = indexWriter.maxDoc();
-        indexWriter.close();
-
-        return numIndexed;
+        indexDirectory(iWriter, dataDir, suffix);
+        final int numIndexed = iWriter.maxDoc();
+        LOG.info("Total files indexed: " + numIndexed);
+        iWriter.close();
     }
 
     /**
@@ -68,7 +69,7 @@ public class FileIndexerImpl implements FileIndexer {
             if (f.isDirectory()) {
                 indexDirectory(indexWriter, f, suffix);
             } else {
-                indexFileWithIndexWriter(indexWriter, f, suffix);
+                indexFile(indexWriter, f, suffix);
             }
         }
     }
@@ -81,27 +82,28 @@ public class FileIndexerImpl implements FileIndexer {
      * @param suffix
      * @throws IOException
      */
-    private void indexFileWithIndexWriter(final IndexWriter indexWriter,
-            final File f, final String suffix) throws IOException {
+    private void indexFile(final IndexWriter iWriter, final File f,
+            final String suffix) throws IOException {
 
         if (f.isHidden() || f.isDirectory() || !f.canRead() || !f.exists()
                 || (suffix != null && !f.getName().endsWith(suffix))) {
             return;
         }
-        System.out.println("Indexing file " + f.getCanonicalPath());
-        indexWriter.addDocument(getLuceneDoc(f));
+        LOG.info("Indexing file " + f.getCanonicalPath());
+        final Document doc = createLuceneDoc(f);
+        iWriter.addDocument(doc);
     }
 
     /**
      * Get file attributes and create lucene document.
      *
-     * @param f
+     * @param file
      *            the file
      * @return lucene document
      * @throws IOException
      */
-    private Document getLuceneDoc(final File f) throws IOException {
-        final Path paths = Paths.get(f.getCanonicalPath());
+    private Document createLuceneDoc(final File file) throws IOException {
+        final Path paths = Paths.get(file.getCanonicalPath());
         final UserPrincipal owner = Files.getOwner(paths);
         final String username = owner.getName();
         final BasicFileAttributes attr = Files.readAttributes(paths,
@@ -110,12 +112,12 @@ public class FileIndexerImpl implements FileIndexer {
         final String lastModified = getAttrVal(attr, FileProperties.MODIFIED);
         final String created = getAttrVal(attr, FileProperties.CREATED);
         final String size = String.valueOf(attr.size());
-        final String content = FileUtils.readFileToString(f);
-        final String path = f.getCanonicalPath();
-        final String name = f.getName();
+        final String content = FileUtils.readFileToString(file);
+        final String path = file.getCanonicalPath();
+        final String name = file.getName();
 
         return newLuceneDoc(content, path, name, username, lastModified, size,
-                created, getDocType(f));
+                created, getDocType(file));
     }
 
     /**
@@ -162,7 +164,8 @@ public class FileIndexerImpl implements FileIndexer {
         case CREATED:
             return DATE_FORMATTER.format((attr.creationTime().toMillis()));
         default:
-            throw new IllegalArgumentException("not supported.");
+            throw new IllegalArgumentException(prop.toString()
+                    + "is not supported.");
         }
     }
 

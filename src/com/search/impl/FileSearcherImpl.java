@@ -8,6 +8,8 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.search.FileSearcher;
 
@@ -18,10 +20,11 @@ import com.search.FileSearcher;
  *
  */
 public class FileSearcherImpl implements FileSearcher {
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -49,13 +52,13 @@ public class FileSearcherImpl implements FileSearcher {
             ParseException {
         final Query query = Utils.getQueryParser().parse(queryStr);
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
-        System.out.println(String.format(
-                "Found %d documents matching the query: %s", hits.length,
-                queryStr));
-        System.out.println("Search results: \n");
+
+        LOG.info(String.format("Found %d documents matching the query: %s",
+                hits.length, queryStr));
+        LOG.info("Search results: \n");
         for (final ScoreDoc d : hits) {
             final Document doc = searcher.doc(d.doc);
-            System.out.println(doc.get("filepath"));
+            LOG.info(doc.get("filepath"));
         }
     }
 }

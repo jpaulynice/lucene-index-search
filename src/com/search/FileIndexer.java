@@ -17,8 +17,7 @@ public interface FileIndexer {
      *            the directory to index
      * @param suffix
      *            the file type
-     * @return number of documents indexed
      * @throws IOException
      */
-    public int index(String dir, String suffix) throws IOException;
+    public void index(String dir, String suffix) throws IOException;
 }
