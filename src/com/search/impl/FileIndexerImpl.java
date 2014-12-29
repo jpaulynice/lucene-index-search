@@ -28,22 +28,20 @@ import com.search.FileIndexer;
  *
  */
 public class FileIndexerImpl implements FileIndexer {
-    private static SimpleDateFormat DATE_FORMATTER;
-
-    public FileIndexerImpl() {
-        DATE_FORMATTER = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-    }
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
+            "MM/dd/yyyy HH:mm:ss");
+    private static final Version VERSION = Version.LUCENE_47;
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public int index(final String dirToIndex, final String suffix)
             throws IOException {
-        final IndexWriterConfig config = new IndexWriterConfig(
-                Version.LUCENE_47, new StandardAnalyzer(Version.LUCENE_47));
+        final IndexWriterConfig config = new IndexWriterConfig(VERSION,
+                new StandardAnalyzer(VERSION));
         final IndexWriter indexWriter = new IndexWriter(Utils.getIndexDir(),
                 config);
         final File dataDir = new File(dirToIndex);

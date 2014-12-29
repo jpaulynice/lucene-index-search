@@ -21,7 +21,7 @@ public class FileSearcherImpl implements FileSearcher {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -36,7 +36,7 @@ public class FileSearcherImpl implements FileSearcher {
     }
 
     /**
-     * Search the index for given query and return only specified top hits.
+     * Search the index for given query and return only specified hits.
      *
      * @param searcher
      * @param queryStr
