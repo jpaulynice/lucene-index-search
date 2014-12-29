@@ -47,7 +47,7 @@ public class Searcher {
         final int hits = 100;
 
         final FileSearcher searcher = new FileSearcherImpl();
-        searcher.searchIndex(query, hits);
+        searcher.search(query, hits);
     }
 }
 ```
