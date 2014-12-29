@@ -5,40 +5,50 @@ This is a simple example of how to use apache lucene to index and search a direc
 
 Currently, the application is set to index files ending in "java" which can be changed in the main method of Indexer.java
 ```java
-public static void main(String[] args) throws Exception {
-	//specify where lucene index directory is created
-	File luceneDir = new File("/tmp/lucene-index");
-	Directory directory = FSDirectory.open(luceneDir);
-	
-	//directory to index
-	File dataDir = new File("/Users/julespaulynice/Documents/workspace");
-	
-	//file types
-	String suffix = "java";
+package com.search.demo;
 
-	FileIndexer indexer = new FileIndexerImpl();
-	
-	int numIndex = indexer.index(directory, dataDir, suffix);
+import com.search.FileIndexer;
+import com.search.impl.FileIndexerImpl;
 
-	System.out.println("Total files indexed " + numIndex);
+public class Indexer {
+    /**
+     * Main method to index directory
+     *
+     * @param args
+     * @throws Exception
+     */
+    public static void main(final String[] args) throws Exception {
+        final String dirToIndex = "/Users/julespaulynice/Documents/workspace";
+        final String suffix = "java";
+
+        final FileIndexer indexer = new FileIndexerImpl();
+        final int numIndex = indexer.index(dirToIndex, suffix);
+        System.out.println("Total files indexed " + numIndex);
+    }
 }
 ```
 
 Then using we search for "lucene" and list the file paths that match our query.
 
 ```java
-public static void main(String[] args) throws Exception {
-	//specify lucene index directory to search
-	File indexDir = new File("/tmp/lucene-index");
-	Directory directory = FSDirectory.open(indexDir);
+package com.search.demo;
 
-	//query string
-	String query = "lucene";
-	
-	//max results to return
-	int hits = 100;
+import com.search.FileSearcher;
+import com.search.impl.FileSearcherImpl;
 
-	FileSearcher searcher = new FileSearcherImpl();
-	searcher.searchIndex(directory, query, hits);
+public class Searcher {
+    /**
+     * Main method to search directory
+     *
+     * @param args
+     * @throws Exception
+     */
+    public static void main(final String[] args) throws Exception {
+        final String query = "lucene";
+        final int hits = 100;
+
+        final FileSearcher searcher = new FileSearcherImpl();
+        searcher.searchIndex(query, hits);
+    }
 }
 ```
