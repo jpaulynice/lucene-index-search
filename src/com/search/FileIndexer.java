@@ -1,5 +1,7 @@
 package com.search;
 
+import java.io.IOException;
+
 /**
  * Simple interface with one method to index a directory.
  *
@@ -18,5 +20,5 @@ public interface FileIndexer {
      * @return number of documents indexed
      * @throws Exception
      */
-    public int index(String dir, String suffix) throws Exception;
+    public int index(String dir, String suffix) throws IOException;
 }
