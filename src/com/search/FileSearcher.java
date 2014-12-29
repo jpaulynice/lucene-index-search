@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 /**
- * Sinple interface for search
+ * Simple interface for searching a lucene index directory
  *
  * @author Jay Paulynice
  *
@@ -19,7 +19,8 @@ public interface FileSearcher {
      *            string to search for
      * @param maxHits
      *            number of results to return
-     * @throws Exception
+     * @throws IOException
+     * @throws ParseException
      */
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException;
