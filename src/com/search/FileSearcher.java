@@ -1,5 +1,9 @@
 package com.search;
 
+import java.io.IOException;
+
+import org.apache.lucene.queryparser.classic.ParseException;
+
 /**
  * Sinple interface for search
  *
@@ -17,5 +21,6 @@ public interface FileSearcher {
      *            number of results to return
      * @throws Exception
      */
-    public void searchIndex(String queryStr, int maxHits) throws Exception;
+    public void search(final String queryStr, final int maxHits)
+            throws IOException, ParseException;
 }

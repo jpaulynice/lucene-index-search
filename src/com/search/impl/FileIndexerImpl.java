@@ -17,14 +17,12 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import com.search.FileIndexer;
 
 /**
- * FileIndexer implementation.
+ * Default implementation for {@link FileIndexer}
  *
  * @author Jay Paulynice
  *
@@ -36,27 +34,19 @@ public class FileIndexerImpl implements FileIndexer {
         DATE_FORMATTER = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
     }
 
-    /**
-     * Method to index a directory by passing the directory to index, location
-     * to store the index, and word endings.
-     *
-     * @param indexDir
-     * @param dataDir
-     * @param suffix
-     * @return
-     * @throws Exception
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public int index(final String dirToIndex, final String suffix)
-            throws Exception {
-
-        final Directory luceneDir = FSDirectory.open(new File(
-                "/tmp/lucene-index"));
-        final File dataDir = new File(dirToIndex);
-
+            throws IOException {
         final IndexWriterConfig config = new IndexWriterConfig(
                 Version.LUCENE_47, new StandardAnalyzer(Version.LUCENE_47));
-        final IndexWriter indexWriter = new IndexWriter(luceneDir, config);
+        final IndexWriter indexWriter = new IndexWriter(Utils.getIndexDir(),
+                config);
+        final File dataDir = new File(dirToIndex);
 
         indexDirectory(indexWriter, dataDir, suffix);
         final int numIndexed = indexWriter.maxDoc();
@@ -100,6 +90,7 @@ public class FileIndexerImpl implements FileIndexer {
                 || (suffix != null && !f.getName().endsWith(suffix))) {
             return;
         }
+        System.out.println("Indexing file " + f.getCanonicalPath());
         indexWriter.addDocument(getLuceneDoc(f));
     }
 
@@ -112,8 +103,6 @@ public class FileIndexerImpl implements FileIndexer {
      * @throws IOException
      */
     private Document getLuceneDoc(final File f) throws IOException {
-        System.out.println("Indexing file " + f.getCanonicalPath());
-
         final Path paths = Paths.get(f.getCanonicalPath());
         final UserPrincipal owner = Files.getOwner(paths);
         final String username = owner.getName();
@@ -127,8 +116,8 @@ public class FileIndexerImpl implements FileIndexer {
         final String path = f.getCanonicalPath();
         final String name = f.getName();
 
-        return createLuceneDoc(content, path, name, username, lastModified,
-                size, created, getDocType(f));
+        return newLuceneDoc(content, path, name, username, lastModified, size,
+                created, getDocType(f));
     }
 
     /**
@@ -144,7 +133,7 @@ public class FileIndexerImpl implements FileIndexer {
      * @param docType
      * @return
      */
-    private Document createLuceneDoc(final String content, final String path,
+    private Document newLuceneDoc(final String content, final String path,
             final String name, final String username, final String modified,
             final String size, final String created, final String docType) {
         final Document doc = new Document();
@@ -181,7 +170,7 @@ public class FileIndexerImpl implements FileIndexer {
 
     /**
      * Get document type
-     * 
+     *
      * @param f
      * @return
      */

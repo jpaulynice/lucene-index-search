@@ -1,5 +1,9 @@
 package com.search.demo;
 
+import java.io.IOException;
+
+import org.apache.lucene.queryparser.classic.ParseException;
+
 import com.search.FileSearcher;
 import com.search.impl.FileSearcherImpl;
 
@@ -11,11 +15,12 @@ public class Searcher {
      * @param args
      * @throws Exception
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) throws IOException,
+            ParseException {
         final String query = "lucene";
         final int hits = 100;
 
         final FileSearcher searcher = new FileSearcherImpl();
-        searcher.searchIndex(query, hits);
+        searcher.search(query, hits);
     }
 }

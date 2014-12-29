@@ -8,8 +8,8 @@ package com.search;
  */
 public interface FileIndexer {
     /**
-     * Method to index a directory by passing the directory to index, location
-     * to store the index, and word endings.
+     * Method to index a directory by passing the directory to index and file
+     * type.
      *
      * @param dir
      *            the directory to index
