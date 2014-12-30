@@ -24,7 +24,7 @@ public class FileSearcherImpl implements FileSearcher {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -52,9 +52,21 @@ public class FileSearcherImpl implements FileSearcher {
             ParseException {
         final Query query = Utils.getQueryParser().parse(queryStr);
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
-
         LOG.info(String.format("Found %d documents matching the query: %s",
                 hits.length, queryStr));
+
+        getResults(searcher, hits);
+    }
+
+    /**
+     * Get search results
+     * 
+     * @param searcher
+     * @param hits
+     * @throws IOException
+     */
+    private void getResults(final IndexSearcher searcher, final ScoreDoc[] hits)
+            throws IOException {
         LOG.info("Search results: \n");
         for (final ScoreDoc d : hits) {
             final Document doc = searcher.doc(d.doc);
