@@ -7,17 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.UserPrincipal;
-import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +27,21 @@ import com.search.FileIndexer;
  */
 public class FileIndexerImpl implements FileIndexer {
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
-            "MM/dd/yyyy HH:mm:ss");
-    private static final Version VERSION = Version.LUCENE_47;
-    private static final IndexWriterConfig CONFIG = new IndexWriterConfig(
-            VERSION, new StandardAnalyzer(VERSION));
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        final IndexWriter iWriter = new IndexWriter(Utils.getIndexDir(), CONFIG);
+        final IndexWriter iWriter = new IndexWriter(Utils.getIndexDir(),
+                Utils.CONFIG);
         final File dataDir = new File(dirToIndex);
 
         indexDirectory(iWriter, dataDir, suffix);
-        final int numIndexed = iWriter.maxDoc();
-        LOG.info("Total files indexed: " + numIndexed);
+        LOG.info("Total files indexed: " + iWriter.maxDoc());
         iWriter.close();
     }
 
@@ -160,9 +151,11 @@ public class FileIndexerImpl implements FileIndexer {
             final FileProperties prop) {
         switch (prop) {
         case MODIFIED:
-            return DATE_FORMATTER.format((attr.lastModifiedTime().toMillis()));
+            return Utils.DATE_FORMATTER.format((attr.lastModifiedTime()
+                    .toMillis()));
         case CREATED:
-            return DATE_FORMATTER.format((attr.creationTime().toMillis()));
+            return Utils.DATE_FORMATTER
+                    .format((attr.creationTime().toMillis()));
         default:
             throw new IllegalArgumentException(prop.toString()
                     + "is not supported.");
