@@ -10,17 +10,39 @@ import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
+/**
+ * @author Jay Paulynice
+ *
+ */
 public class Utils {
+    /**
+     * date formatter
+     */
     public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");
+    /**
+     * lucene version
+     */
     public static final Version VERSION = Version.LUCENE_47;
+
+    /**
+     * lucene index config
+     */
     public static final IndexWriterConfig CONFIG = new IndexWriterConfig(
             VERSION, new StandardAnalyzer(VERSION));
 
+    /**
+     * @return {@linkFSDirectory}
+     * @throws IOException
+     *             if unable to open file
+     */
     public static FSDirectory getIndexDir() throws IOException {
         return FSDirectory.open(new File("/tmp/lucene-index"));
     }
 
+    /**
+     * @return {@link QueryParser} to parse query
+     */
     public static QueryParser getQueryParser() {
         return new QueryParser(Version.LUCENE_47, "contents",
                 new StandardAnalyzer(Version.LUCENE_47));

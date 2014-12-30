@@ -7,13 +7,23 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import com.search.FileSearcher;
 import com.search.impl.FileSearcherImpl;
 
+/**
+ * Lucene file search demo
+ *
+ * @author Jay Paulynice
+ *
+ */
 public class Searcher {
 
     /**
-     * Main method to search directory
+     * search directory
      *
      * @param args
-     * @throws Exception
+     *            arguments
+     * @throws IOException
+     *             if problems with reading file
+     * @throws ParseException
+     *             if unable to parse query
      */
     public static void main(final String[] args) throws IOException,
             ParseException {

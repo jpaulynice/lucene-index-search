@@ -20,7 +20,10 @@ public interface FileSearcher {
      * @param maxHits
      *            number of results to return
      * @throws IOException
+     *             if problems occur while processing a file
+     *
      * @throws ParseException
+     *             if unable to parse the query
      */
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException;
