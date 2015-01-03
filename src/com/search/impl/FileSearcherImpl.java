@@ -20,11 +20,12 @@ import com.search.FileSearcher;
  *
  */
 public class FileSearcherImpl implements FileSearcher {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final Logger LOG = LoggerFactory
+            .getLogger(FileSearcherImpl.class);
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -51,9 +52,13 @@ public class FileSearcherImpl implements FileSearcher {
             final String queryStr, final int maxHits) throws IOException,
             ParseException {
         final Query query = Utils.getQueryParser().parse(queryStr);
+
+        final long now = System.nanoTime();
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
-        LOG.info("Found " + hits.length + " documents matching the query: "
-                + queryStr);
+        final long time = (System.nanoTime() - now) / 1000000;
+        LOG.info(String
+                .format("Search took %d milli seconds.  Found %d documents matching the query: %s",
+                        time, hits.length, queryStr));
 
         getResults(searcher, hits);
     }

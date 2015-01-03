@@ -26,11 +26,12 @@ import com.search.FileIndexer;
  *
  */
 public class FileIndexerImpl implements FileIndexer {
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private static final Logger LOG = LoggerFactory
+            .getLogger(FileIndexerImpl.class);
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
