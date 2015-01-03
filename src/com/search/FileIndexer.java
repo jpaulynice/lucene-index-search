@@ -12,7 +12,7 @@ public interface FileIndexer {
     /**
      * Method to index text files in a directory and its sub directories by
      * passing the top level directory to index and file type. If the file type
-     * is {@code null } then all files are indexed in the directory.
+     * is {@code null} then all files are indexed in the directory.
      *
      * @param dataDir the top level directory to index
      * @param suffix the file type (.java, .txt, etc...)
