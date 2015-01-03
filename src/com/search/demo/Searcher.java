@@ -16,17 +16,14 @@ import com.search.impl.FileSearcherImpl;
 public class Searcher {
 
     /**
-     * search directory
+     * Search directory
      *
-     * @param args
-     *            arguments
-     * @throws IOException
-     *             if problems with reading file
-     * @throws ParseException
-     *             if unable to parse query
+     * @param args arguments
+     * @throws IOException if problems with reading file
+     * @throws ParseException if unable to parse query
      */
     public static void main(final String[] args) throws IOException,
-            ParseException {
+    ParseException {
         final String query = "lucene";
         final int hits = 100;
 

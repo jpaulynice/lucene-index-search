@@ -13,10 +13,8 @@ public class Indexer {
     /**
      * Main method to index directory
      *
-     * @param args
-     *            arguments
-     * @throws IOException
-     *             if problems with reading file
+     * @param args arguments
+     * @throws IOException if problems with reading file
      */
     public static void main(final String[] args) throws IOException {
         final String dirToIndex = "/Users/julespaulynice/Documents/workspace";

@@ -42,16 +42,11 @@ public class FileSearcherImpl implements FileSearcher {
     /**
      * Search the index for given query and return only specified hits.
      *
-     * @param searcher
-     *            the lucene index searcher
-     * @param queryStr
-     *            the plain query string
-     * @param maxHits
-     *            max hits to limit search to
-     * @throws IOException
-     *             if error reading from disk
-     * @throws ParseException
-     *             if error parsing queryStr
+     * @param searcher the lucene index searcher
+     * @param queryStr the plain query string
+     * @param maxHits max hits to limit search to
+     * @throws IOException if error reading from disk
+     * @throws ParseException if error parsing queryStr
      */
     private void searchIndex(final IndexSearcher searcher,
             final String queryStr, final int maxHits) throws IOException,
@@ -71,12 +66,9 @@ public class FileSearcherImpl implements FileSearcher {
     /**
      * Get search results
      *
-     * @param searcher
-     *            the lucene index searcher
-     * @param hits
-     *            results array
-     * @throws IOException
-     *             if error reading from disk
+     * @param searcher the lucene index searcher
+     * @param hits results array
+     * @throws IOException if error reading from disk
      */
     private void getResults(final IndexSearcher searcher, final ScoreDoc[] hits)
             throws IOException {

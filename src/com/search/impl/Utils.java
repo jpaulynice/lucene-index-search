@@ -32,9 +32,8 @@ public class Utils {
             VERSION, new StandardAnalyzer(VERSION));
 
     /**
-     * @return {@linkFSDirectory}
-     * @throws IOException
-     *             if unable to open file
+     * @return {@link FSDirectory}
+     * @throws IOException if unable to open file
      */
     public static FSDirectory getIndexDir() throws IOException {
         return FSDirectory.open(new File("/tmp/lucene-index"));
