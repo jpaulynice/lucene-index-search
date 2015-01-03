@@ -50,9 +50,13 @@ public class FileIndexerImpl implements FileIndexer {
      * Method to index a directory recursively.
      *
      * @param indexWriter
+     *            the lucene index writer object
      * @param dataDir
+     *            the directory to index
      * @param suffix
+     *            the file type
      * @throws IOException
+     *             if errors trying to read file
      */
     private void indexDirectory(final IndexWriter indexWriter,
             final File dataDir, final String suffix) throws IOException {
@@ -70,9 +74,13 @@ public class FileIndexerImpl implements FileIndexer {
      * Index a file by creating a Document and adding fields
      *
      * @param indexWriter
+     *            the lucene index writer object
      * @param f
+     *            the file to index
      * @param suffix
+     *            the file type
      * @throws IOException
+     *             if errors trying to read file
      */
     private void indexFile(final IndexWriter iWriter, final File f,
             final String suffix) throws IOException {
@@ -116,14 +124,22 @@ public class FileIndexerImpl implements FileIndexer {
      * Create lucene document from file attributes
      *
      * @param content
+     *            the file content
      * @param path
+     *            the file path
      * @param name
+     *            the file name
      * @param username
+     *            the owner of the file
      * @param modified
+     *            last modified date
      * @param size
+     *            the file size
      * @param created
+     *            the file created date
      * @param docType
-     * @return
+     *            the file type
+     * @return lucene document with the fields
      */
     private Document newLuceneDoc(final String content, final String path,
             final String name, final String username, final String modified,
@@ -145,8 +161,10 @@ public class FileIndexerImpl implements FileIndexer {
      * Get date attributes
      *
      * @param attr
+     *            basic file attributes object
      * @param prop
-     * @return
+     *            property to get
+     * @return property
      */
     private String getAttrVal(final BasicFileAttributes attr,
             final FileProperties prop) {
@@ -167,7 +185,8 @@ public class FileIndexerImpl implements FileIndexer {
      * Get document type
      *
      * @param f
-     * @return
+     *            the file
+     * @return the file type
      */
     private String getDocType(final File f) {
         final int start = f.getName().lastIndexOf(".");
