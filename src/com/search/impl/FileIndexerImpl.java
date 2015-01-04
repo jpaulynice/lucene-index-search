@@ -32,19 +32,19 @@ public class FileIndexerImpl implements FileIndexer {
             .getLogger(FileIndexerImpl.class);
 
     /**
+     * date formatter
+     */
+    private final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
+            "MM/dd/yyyy HH:mm:ss");
+
+    /**
      * lucene index writer
      */
     private IndexWriter iWriter;
 
-    /**
-     * date formatter
-     */
-    public final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
-            "MM/dd/yyyy HH:mm:ss");
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
@@ -57,6 +57,7 @@ public class FileIndexerImpl implements FileIndexer {
     }
 
     /**
+     * Init index writer if null
      *
      * @throws IOException
      */
@@ -68,6 +69,11 @@ public class FileIndexerImpl implements FileIndexer {
         }
     }
 
+    /**
+     * Shutdown index writer
+     *
+     * @throws IOException
+     */
     private void shutDownIndexWriter() throws IOException {
         if (iWriter != null) {
             LOG.info("Shutting down index writer...");
