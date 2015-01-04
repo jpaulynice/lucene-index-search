@@ -31,15 +31,11 @@ public class FileIndexerImpl implements FileIndexer {
     private static final Logger LOG = LoggerFactory
             .getLogger(FileIndexerImpl.class);
 
-    /**
-     * date formatter
-     */
+    /** date formatter */
     private final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");
 
-    /**
-     * lucene index writer
-     */
+    /** lucene index writer */
     private IndexWriter iWriter;
 
     /*
