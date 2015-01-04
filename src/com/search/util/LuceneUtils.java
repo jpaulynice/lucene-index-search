@@ -1,8 +1,7 @@
-package com.search.impl;
+package com.search.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -14,12 +13,7 @@ import org.apache.lucene.util.Version;
  * @author Jay Paulynice
  *
  */
-public class Utils {
-    /**
-     * date formatter
-     */
-    public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
-            "MM/dd/yyyy HH:mm:ss");
+public class LuceneUtils {
     /**
      * lucene version
      */

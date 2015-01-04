@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.search.FileSearcher;
+import com.search.util.LuceneUtils;
 
 /**
  * Simple searcher class
@@ -25,13 +26,13 @@ public class FileSearcherImpl implements FileSearcher {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException {
-        final DirectoryReader ireader = DirectoryReader.open(Utils
+        final DirectoryReader ireader = DirectoryReader.open(LuceneUtils
                 .getIndexDir());
         final IndexSearcher searcher = new IndexSearcher(ireader);
 
@@ -51,7 +52,7 @@ public class FileSearcherImpl implements FileSearcher {
     private void searchIndex(final IndexSearcher searcher,
             final String queryStr, final int maxHits) throws IOException,
             ParseException {
-        final Query query = Utils.getQueryParser().parse(queryStr);
+        final Query query = LuceneUtils.getQueryParser().parse(queryStr);
 
         final long now = System.nanoTime();
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;

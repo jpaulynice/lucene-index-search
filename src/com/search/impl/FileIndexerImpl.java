@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.UserPrincipal;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.lucene.document.Document;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.search.FileIndexer;
+import com.search.util.LuceneUtils;
 
 /**
  * Default implementation for {@link FileIndexer}
@@ -29,6 +31,17 @@ public class FileIndexerImpl implements FileIndexer {
     private static final Logger LOG = LoggerFactory
             .getLogger(FileIndexerImpl.class);
 
+    /**
+     * lucene index writer
+     */
+    private IndexWriter iWriter;
+
+    /**
+     * date formatter
+     */
+    public final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
+            "MM/dd/yyyy HH:mm:ss");
+
     /*
      * (non-Javadoc)
      *
@@ -37,13 +50,30 @@ public class FileIndexerImpl implements FileIndexer {
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        final IndexWriter iWriter = new IndexWriter(Utils.getIndexDir(),
-                Utils.CONFIG);
-        final File dataDir = new File(dirToIndex);
-
-        indexDirectory(iWriter, dataDir, suffix);
+        initIndexWriter();
+        indexDirectory(new File(dirToIndex), suffix);
         LOG.info("Total files indexed: " + iWriter.maxDoc());
-        iWriter.close();
+        shutDownIndexWriter();
+    }
+
+    /**
+     *
+     * @throws IOException
+     */
+    private void initIndexWriter() throws IOException {
+        if (iWriter == null) {
+            LOG.info("Initializing index writer...");
+            iWriter = new IndexWriter(LuceneUtils.getIndexDir(),
+                    LuceneUtils.CONFIG);
+        }
+    }
+
+    private void shutDownIndexWriter() throws IOException {
+        if (iWriter != null) {
+            LOG.info("Shutting down index writer...");
+            iWriter.close();
+            iWriter = null;
+        }
     }
 
     /**
@@ -54,14 +84,14 @@ public class FileIndexerImpl implements FileIndexer {
      * @param suffix the file type
      * @throws IOException if errors trying to read file
      */
-    private void indexDirectory(final IndexWriter indexWriter,
-            final File dataDir, final String suffix) throws IOException {
+    private void indexDirectory(final File dataDir, final String suffix)
+            throws IOException {
         final File[] files = dataDir.listFiles();
         for (final File f : files) {
             if (f.isDirectory()) {
-                indexDirectory(indexWriter, f, suffix);
+                indexDirectory(f, suffix);
             } else {
-                indexFile(indexWriter, f, suffix);
+                indexFile(f, suffix);
             }
         }
     }
@@ -74,9 +104,8 @@ public class FileIndexerImpl implements FileIndexer {
      * @param suffix the file type
      * @throws IOException if errors trying to read file
      */
-    private void indexFile(final IndexWriter iWriter, final File f,
-            final String suffix) throws IOException {
-
+    private void indexFile(final File f, final String suffix)
+            throws IOException {
         if (f.isHidden() || f.isDirectory() || !f.canRead() || !f.exists()
                 || (suffix != null && !f.getName().endsWith(suffix))) {
             return;
@@ -151,11 +180,9 @@ public class FileIndexerImpl implements FileIndexer {
             final FileProperties prop) {
         switch (prop) {
         case MODIFIED:
-            return Utils.DATE_FORMATTER.format((attr.lastModifiedTime()
-                    .toMillis()));
+            return DATE_FORMATTER.format((attr.lastModifiedTime().toMillis()));
         case CREATED:
-            return Utils.DATE_FORMATTER
-                    .format((attr.creationTime().toMillis()));
+            return DATE_FORMATTER.format((attr.creationTime().toMillis()));
         default:
             throw new IllegalArgumentException(prop.toString()
                     + "is not supported.");
