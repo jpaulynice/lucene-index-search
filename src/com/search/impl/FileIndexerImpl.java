@@ -15,6 +15,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +23,8 @@ import com.search.FileIndexer;
 import com.search.util.LuceneUtils;
 
 /**
- * Default implementation for {@link FileIndexer}
+ * Default implementation for {@link FileIndexer}. This is not thread-safe, it's
+ * only an example on how to make use of apache lucene to index text files.
  *
  * @author Jay Paulynice
  *
@@ -38,44 +40,23 @@ public class FileIndexerImpl implements FileIndexer {
     /** lucene index writer */
     private IndexWriter iWriter;
 
+    /** lucene file system directory */
+    private FSDirectory fsDir;
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        initIndexWriter();
+        initLuceneIndex();
+        final long now = System.nanoTime();
         indexDirectory(new File(dirToIndex), suffix);
-        LOG.info("Total files indexed: " + iWriter.maxDoc());
-        shutDownIndexWriter();
-    }
-
-    /**
-     * Init index writer if null
-     *
-     * @throws IOException
-     */
-    private void initIndexWriter() throws IOException {
-        if (iWriter == null) {
-            LOG.info("Initializing index writer...");
-            iWriter = new IndexWriter(LuceneUtils.getIndexDir(),
-                    LuceneUtils.CONFIG);
-        }
-    }
-
-    /**
-     * Shutdown index writer
-     *
-     * @throws IOException
-     */
-    private void shutDownIndexWriter() throws IOException {
-        if (iWriter != null) {
-            LOG.info("Shutting down index writer...");
-            iWriter.close();
-            iWriter = null;
-        }
+        final long time = (System.nanoTime() - now) / 1000000000;
+        LOG.info(String.format("Indexed %d files in %d seconds.",
+                iWriter.maxDoc(), time));
     }
 
     /**
@@ -200,5 +181,70 @@ public class FileIndexerImpl implements FileIndexer {
     private String getDocType(final File f) {
         final int start = f.getName().lastIndexOf(".");
         return f.getName().substring(start + 1);
+    }
+
+    /**
+     * Init lucene index for indexing
+     *
+     * @throws IOException
+     */
+    private void initLuceneIndex() throws IOException {
+        initFSDirectory();
+        initIndexWriter();
+    }
+
+    /**
+     * Init fs directory index
+     *
+     * @throws IOException
+     */
+    private void initFSDirectory() throws IOException {
+        if (fsDir == null) {
+            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+        }
+    }
+
+    /**
+     * Init index writer
+     *
+     * @throws IOException
+     */
+    private void initIndexWriter() throws IOException {
+        if (iWriter == null) {
+            LOG.info("Initializing index writer...");
+            iWriter = new IndexWriter(fsDir, LuceneUtils.CONFIG);
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        closeIndexWriter();
+        closeFSDirectory();
+    }
+
+    /**
+     * close index writer
+     *
+     * @throws IOException
+     */
+    private void closeIndexWriter() throws IOException {
+        if (iWriter != null) {
+            LOG.info("Shutting down index writer...");
+            iWriter.close();
+            iWriter = null;
+        }
+    }
+
+    /**
+     * close fs directory index
+     *
+     * @throws IOException
+     */
+    private void closeFSDirectory() {
+        if (fsDir != null) {
+            LOG.info("closing FSDirectory...");
+            fsDir.close();
+            fsDir = null;
+        }
     }
 }

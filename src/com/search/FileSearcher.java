@@ -22,4 +22,11 @@ public interface FileSearcher {
      */
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException;
+
+    /**
+     * Close index reader and fs directory to reclaim resources
+     *
+     * @throws IOException if problems occur while closing
+     */
+    public void close() throws IOException;
 }

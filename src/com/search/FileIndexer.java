@@ -19,4 +19,11 @@ public interface FileIndexer {
      * @throws IOException if problems occur while processing a file
      */
     public void index(String dataDir, String suffix) throws IOException;
+
+    /**
+     * Close index writer and fs directory to reclaim resources
+     *
+     * @throws IOException if problems occur while closing
+     */
+    public void close() throws IOException;
 }

@@ -23,11 +23,12 @@ public class Searcher {
      * @throws ParseException if unable to parse query
      */
     public static void main(final String[] args) throws IOException,
-    ParseException {
+            ParseException {
         final String query = "lucene";
         final int hits = 100;
 
         final FileSearcher searcher = new FileSearcherImpl();
         searcher.search(query, hits);
+        searcher.close();
     }
 }

@@ -1,5 +1,6 @@
 package com.search.impl;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
@@ -8,6 +9,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,8 @@ import com.search.FileSearcher;
 import com.search.util.LuceneUtils;
 
 /**
- * Simple searcher class
+ * Default implementation for {@link FileSearcher}. This is not thread-safe,
+ * it's only an example on how to make use of apache lucene to index text files.
  *
  * @author Jay Paulynice
  *
@@ -24,20 +27,26 @@ public class FileSearcherImpl implements FileSearcher {
     private static final Logger LOG = LoggerFactory
             .getLogger(FileSearcherImpl.class);
 
+    /** lucene file system directory */
+    private FSDirectory fsDir;
+
+    /** lucene directory reader */
+    private DirectoryReader iReader;
+
+    /** lucene index searcher */
+    private IndexSearcher searcher;
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException {
-        final DirectoryReader ireader = DirectoryReader.open(LuceneUtils
-                .getIndexDir());
-        final IndexSearcher searcher = new IndexSearcher(ireader);
-
-        searchIndex(searcher, queryStr, maxHits);
-        ireader.close();
+        initSearcher();
+        searchIndex(queryStr, maxHits);
+        close();
     }
 
     /**
@@ -49,9 +58,8 @@ public class FileSearcherImpl implements FileSearcher {
      * @throws IOException if error reading from disk
      * @throws ParseException if error parsing queryStr
      */
-    private void searchIndex(final IndexSearcher searcher,
-            final String queryStr, final int maxHits) throws IOException,
-            ParseException {
+    private void searchIndex(final String queryStr, final int maxHits)
+            throws IOException, ParseException {
         final Query query = LuceneUtils.getQueryParser().parse(queryStr);
 
         final long now = System.nanoTime();
@@ -61,7 +69,7 @@ public class FileSearcherImpl implements FileSearcher {
                 .format("Search took %d milli seconds.  Found %d documents matching the query: %s",
                         time, hits.length, queryStr));
 
-        getResults(searcher, hits);
+        getResults(hits);
     }
 
     /**
@@ -71,12 +79,72 @@ public class FileSearcherImpl implements FileSearcher {
      * @param hits results array
      * @throws IOException if error reading from disk
      */
-    private void getResults(final IndexSearcher searcher, final ScoreDoc[] hits)
-            throws IOException {
+    private void getResults(final ScoreDoc[] hits) throws IOException {
         LOG.info("Search results:");
         for (final ScoreDoc d : hits) {
             final Document doc = searcher.doc(d.doc);
             LOG.info(doc.get("filepath"));
+        }
+    }
+
+    /**
+     * Init lucene index for searching
+     *
+     * @throws IOException
+     */
+    private void initSearcher() throws IOException {
+        initFSDirectory();
+        initIndexReader();
+        initIndexSearcher();
+    }
+
+    private void initIndexReader() throws IOException {
+        if (iReader == null) {
+            iReader = DirectoryReader.open(fsDir);
+        }
+    }
+
+    private void initIndexSearcher() {
+        if (searcher == null) {
+            searcher = new IndexSearcher(iReader);
+        }
+    }
+
+    /**
+     * Init fs directory index
+     *
+     * @throws IOException
+     */
+    private void initFSDirectory() throws IOException {
+        if (fsDir == null) {
+            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        closeIndexReader();
+        closeFSDirectory();
+    }
+
+    private void closeIndexReader() throws IOException {
+        if (iReader != null) {
+            LOG.info("closing lucene index reader...");
+            iReader.close();
+            iReader = null;
+        }
+    }
+
+    /**
+     * close fs directory index
+     *
+     * @throws IOException
+     */
+    private void closeFSDirectory() {
+        if (fsDir != null) {
+            LOG.info("closing FSDirectory...");
+            fsDir.close();
+            fsDir = null;
         }
     }
 }

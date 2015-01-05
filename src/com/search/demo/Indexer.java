@@ -22,5 +22,6 @@ public class Indexer {
 
         final FileIndexer indexer = new FileIndexerImpl();
         indexer.index(dirToIndex, suffix);
+        indexer.close();
     }
 }
