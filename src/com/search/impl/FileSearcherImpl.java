@@ -33,25 +33,31 @@ public class FileSearcherImpl implements FileSearcher {
     private DirectoryReader iReader;
 
     /** lucene index searcher */
-    private IndexSearcher searcher;
+    private final IndexSearcher searcher;
+
+    /**
+     * @throws IOException if errors
+     */
+    public FileSearcherImpl() throws IOException {
+        fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+        iReader = DirectoryReader.open(fsDir);
+        searcher = new IndexSearcher(iReader);
+    }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException {
-        initSearcher();
         searchIndex(queryStr, maxHits);
-        close();
     }
 
     /**
      * Search the index for given query and return only specified hits.
      *
-     * @param searcher the lucene index searcher
      * @param queryStr the plain query string
      * @param maxHits max hits to limit search to
      * @throws IOException if error reading from disk
@@ -74,7 +80,6 @@ public class FileSearcherImpl implements FileSearcher {
     /**
      * Get search results
      *
-     * @param searcher the lucene index searcher
      * @param hits results array
      * @throws IOException if error reading from disk
      */
@@ -83,40 +88,6 @@ public class FileSearcherImpl implements FileSearcher {
         for (final ScoreDoc d : hits) {
             final Document doc = searcher.doc(d.doc);
             LOG.info(doc.get("filepath"));
-        }
-    }
-
-    /**
-     * Init lucene index for searching
-     *
-     * @throws IOException
-     */
-    private void initSearcher() throws IOException {
-        initFSDirectory();
-        initIndexReader();
-        initIndexSearcher();
-    }
-
-    private void initIndexReader() throws IOException {
-        if (iReader == null) {
-            iReader = DirectoryReader.open(fsDir);
-        }
-    }
-
-    private void initIndexSearcher() {
-        if (searcher == null) {
-            searcher = new IndexSearcher(iReader);
-        }
-    }
-
-    /**
-     * Init fs directory index
-     *
-     * @throws IOException
-     */
-    private void initFSDirectory() throws IOException {
-        if (fsDir == null) {
-            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
         }
     }
 

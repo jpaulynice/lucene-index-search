@@ -29,16 +29,22 @@ public class FileIndexerImpl implements FileIndexer {
     /** lucene file system directory */
     private FSDirectory fsDir;
 
+    /**
+     * @throws IOException if errors
+     */
+    public FileIndexerImpl() throws IOException {
+        fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+        iWriter = new IndexWriter(fsDir, LuceneUtils.CONFIG);
+    }
+
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        initLuceneIndex();
-
         final long now = System.nanoTime();
         indexDirectory(new File(dirToIndex), suffix);
         final long time = (System.nanoTime() - now) / 1000000000;
@@ -49,7 +55,6 @@ public class FileIndexerImpl implements FileIndexer {
     /**
      * Method to index a directory recursively.
      *
-     * @param indexWriter the lucene index writer object
      * @param dataDir the directory to index
      * @param suffix the file type
      * @throws IOException if errors trying to read file
@@ -69,7 +74,6 @@ public class FileIndexerImpl implements FileIndexer {
     /**
      * Index a file by creating a Document and adding fields
      *
-     * @param indexWriter the lucene index writer object
      * @param f the file to index
      * @param suffix the file type
      * @throws IOException if errors trying to read file
@@ -83,39 +87,6 @@ public class FileIndexerImpl implements FileIndexer {
         LOG.info("Indexing file " + f.getCanonicalPath());
         final Document doc = DocumentUtil.fileToLuceneDoc(f);
         iWriter.addDocument(doc);
-    }
-
-    /**
-     * Init lucene index for indexing
-     *
-     * @throws IOException
-     */
-    private void initLuceneIndex() throws IOException {
-        initFSDirectory();
-        initIndexWriter();
-    }
-
-    /**
-     * Init fs directory index
-     *
-     * @throws IOException
-     */
-    private void initFSDirectory() throws IOException {
-        if (fsDir == null) {
-            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
-        }
-    }
-
-    /**
-     * Init index writer
-     *
-     * @throws IOException
-     */
-    private void initIndexWriter() throws IOException {
-        if (iWriter == null) {
-            LOG.info("Initializing index writer...");
-            iWriter = new IndexWriter(fsDir, LuceneUtils.CONFIG);
-        }
     }
 
     @Override
