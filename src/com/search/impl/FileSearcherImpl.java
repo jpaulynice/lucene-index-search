@@ -17,8 +17,7 @@ import com.search.FileSearcher;
 import com.search.util.LuceneUtils;
 
 /**
- * Default implementation for {@link FileSearcher}. This is not thread-safe,
- * it's only an example on how to make use of apache lucene to index text files.
+ * Default implementation for {@link FileSearcher}.
  *
  * @author Jay Paulynice
  *
@@ -127,6 +126,11 @@ public class FileSearcherImpl implements FileSearcher {
         closeFSDirectory();
     }
 
+    /**
+     * close lucene index reader
+     *
+     * @throws IOException
+     */
     private void closeIndexReader() throws IOException {
         if (iReader != null) {
             LOG.info("closing lucene index reader...");

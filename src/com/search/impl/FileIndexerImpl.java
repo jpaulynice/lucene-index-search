@@ -14,8 +14,7 @@ import com.search.util.DocumentUtil;
 import com.search.util.LuceneUtils;
 
 /**
- * Default implementation for {@link FileIndexer}. This is not thread-safe, it's
- * only an example on how to make use of apache lucene to index text files.
+ * Default implementation for {@link FileIndexer}.
  *
  * @author Jay Paulynice
  *
@@ -32,13 +31,14 @@ public class FileIndexerImpl implements FileIndexer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
         initLuceneIndex();
+
         final long now = System.nanoTime();
         indexDirectory(new File(dirToIndex), suffix);
         final long time = (System.nanoTime() - now) / 1000000000;
