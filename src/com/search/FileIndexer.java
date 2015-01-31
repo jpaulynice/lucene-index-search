@@ -8,7 +8,7 @@ import java.io.IOException;
  * @author Jay Paulynice
  *
  */
-public interface FileIndexer {
+public interface FileIndexer extends Closeable {
     /**
      * Method to index text files in a directory and its sub directories by
      * passing the top level directory to index and file type. If the file type
@@ -19,11 +19,4 @@ public interface FileIndexer {
      * @throws IOException if problems occur while processing a file
      */
     public void index(String dataDir, String suffix) throws IOException;
-
-    /**
-     * Close index writer and fs directory to reclaim resources
-     *
-     * @throws IOException if problems occur while closing
-     */
-    public void close() throws IOException;
 }

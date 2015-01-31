@@ -10,7 +10,7 @@ import org.apache.lucene.queryparser.classic.ParseException;
  * @author Jay Paulynice
  *
  */
-public interface FileSearcher {
+public interface FileSearcher extends Closeable {
     /**
      * Search a lucene index directory for given query string and returning
      * specified number of top results.
@@ -22,11 +22,4 @@ public interface FileSearcher {
      */
     public void search(final String queryStr, final int maxHits)
             throws IOException, ParseException;
-
-    /**
-     * Close index reader and fs directory to reclaim resources
-     *
-     * @throws IOException if problems occur while closing
-     */
-    public void close() throws IOException;
 }
