@@ -48,8 +48,8 @@ public class FileIndexerImpl implements FileIndexer {
         final long now = System.nanoTime();
         indexDirectory(new File(dirToIndex), suffix);
         final long time = (System.nanoTime() - now) / 1000000000;
-        LOG.info(String.format("Indexed %d files in %d seconds.",
-                iWriter.maxDoc(), time));
+        LOG.info("Indexed {} files in {} seconds.",
+            iWriter.maxDoc(), time));
     }
 
     /**
@@ -84,7 +84,7 @@ public class FileIndexerImpl implements FileIndexer {
                 || (suffix != null && !f.getName().endsWith(suffix))) {
             return;
         }
-        LOG.info("Indexing file " + f.getCanonicalPath());
+        LOG.info("Indexing file: {}", f.getCanonicalPath());
         final Document doc = DocumentUtil.fileToLuceneDoc(f);
         iWriter.addDocument(doc);
     }
