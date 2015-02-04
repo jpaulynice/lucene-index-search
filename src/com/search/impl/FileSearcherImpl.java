@@ -70,8 +70,7 @@ public class FileSearcherImpl implements FileSearcher {
         final long now = System.nanoTime();
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
         final long time = (System.nanoTime() - now) / 1000000;
-        LOG.info(String
-                .format("Search took %d milli seconds.  Found %d documents matching the query: %s",
+        LOG.info("Search took {} milli seconds.  Found {} documents matching the query: {}",
                         time, hits.length, queryStr));
 
         getResults(hits);
