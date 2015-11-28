@@ -4,8 +4,5 @@
 *.war
 *.ear
 /bin
-<<<<<<< HEAD
 .project
 .settings/
-=======
->>>>>>> 1c99695fd1f47f6804f59881da25df895fbe2743
