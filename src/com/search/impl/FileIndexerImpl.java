@@ -17,7 +17,6 @@ import com.search.util.LuceneUtils;
  * Default implementation for {@link FileIndexer}.
  *
  * @author Jay Paulynice
- *
  */
 public class FileIndexerImpl implements FileIndexer {
     private static final Logger LOG = LoggerFactory
@@ -39,17 +38,18 @@ public class FileIndexerImpl implements FileIndexer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
     public void index(final String dirToIndex, final String suffix)
             throws IOException {
-        final long now = System.nanoTime();
+        final long now = System.currentTimeMillis();
+
         indexDirectory(new File(dirToIndex), suffix);
-        final long time = (System.nanoTime() - now) / 1000000000;
-        LOG.info("Indexed {} files in {} seconds.",
-            iWriter.maxDoc(), time));
+
+        LOG.info("Indexed {} files in {} milli seconds.", iWriter.maxDoc(),
+                System.currentTimeMillis() - now);
     }
 
     /**

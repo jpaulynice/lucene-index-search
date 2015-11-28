@@ -7,7 +7,6 @@ import org.apache.lucene.util.Version;
 
 /**
  * @author Jay Paulynice
- *
  */
 public class LuceneUtils {
     /** lucene version */

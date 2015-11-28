@@ -11,7 +11,6 @@ import com.search.impl.FileSearcherImpl;
  * Lucene file search demo
  *
  * @author Jay Paulynice
- *
  */
 public class Searcher {
 
@@ -23,8 +22,8 @@ public class Searcher {
      * @throws ParseException if unable to parse query
      */
     public static void main(final String[] args) throws IOException,
-            ParseException {
-        final String query = "lucene";
+    ParseException {
+        final String query = "blah";
         final int hits = 100;
 
         final FileSearcher searcher = new FileSearcherImpl();

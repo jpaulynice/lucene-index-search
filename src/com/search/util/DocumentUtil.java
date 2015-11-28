@@ -19,10 +19,8 @@ import com.search.impl.FileProperties;
 
 /**
  * @author Jay Paulynice
- *
  */
 public class DocumentUtil {
-
     /** date formatter */
     private final static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(
             "MM/dd/yyyy HH:mm:ss");

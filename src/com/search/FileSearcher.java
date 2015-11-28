@@ -8,7 +8,6 @@ import org.apache.lucene.queryparser.classic.ParseException;
  * Simple interface for searching a lucene index directory
  *
  * @author Jay Paulynice
- *
  */
 public interface FileSearcher extends Closeable {
     /**
@@ -20,6 +19,6 @@ public interface FileSearcher extends Closeable {
      * @throws IOException if problems occur while processing a file
      * @throws ParseException if unable to parse the query
      */
-    void search(final String queryStr, final int maxHits)
-            throws IOException, ParseException;
+    void search(final String queryStr, final int maxHits) throws IOException,
+    ParseException;
 }

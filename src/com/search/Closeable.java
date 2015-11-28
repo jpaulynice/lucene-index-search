@@ -5,7 +5,6 @@ import java.io.IOException;
 /**
  *
  * @author Jay Paulynice
- *
  */
 public interface Closeable {
     /**

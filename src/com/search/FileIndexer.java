@@ -6,7 +6,6 @@ import java.io.IOException;
  * Simple interface for indexing text files in a directory.
  *
  * @author Jay Paulynice
- *
  */
 public interface FileIndexer extends Closeable {
     /**

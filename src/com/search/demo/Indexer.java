@@ -7,7 +7,6 @@ import com.search.impl.FileIndexerImpl;
 
 /**
  * @author Jay Paulynice
- *
  */
 public class Indexer {
     /**
@@ -17,7 +16,7 @@ public class Indexer {
      * @throws IOException if problems with reading file
      */
     public static void main(final String[] args) throws IOException {
-        final String dirToIndex = "/Users/julespaulynice/Documents/workspace";
+        final String dirToIndex = "/Users/jpaulyni/Documents/work4";
         final String suffix = "java";
 
         final FileIndexer indexer = new FileIndexerImpl();

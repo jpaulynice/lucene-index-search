@@ -20,7 +20,6 @@ import com.search.util.LuceneUtils;
  * Default implementation for {@link FileSearcher}.
  *
  * @author Jay Paulynice
- *
  */
 public class FileSearcherImpl implements FileSearcher {
     private static final Logger LOG = LoggerFactory
@@ -46,7 +45,7 @@ public class FileSearcherImpl implements FileSearcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
@@ -65,13 +64,16 @@ public class FileSearcherImpl implements FileSearcher {
      */
     private void searchIndex(final String queryStr, final int maxHits)
             throws IOException, ParseException {
-        final Query query = LuceneUtils.getQueryParser().parse(queryStr);
+        final long now = System.currentTimeMillis();
 
-        final long now = System.nanoTime();
+        final Query query = LuceneUtils.getQueryParser().parse(queryStr);
         final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
-        final long time = (System.nanoTime() - now) / 1000000;
-        LOG.info("Search took {} milli seconds.  Found {} documents matching the query: {}",
-                        time, hits.length, queryStr));
+
+        LOG.info("Search took {} milli seconds.", System.currentTimeMillis()
+                - now);
+
+        LOG.info("Found {} documents matching the query: {}", hits.length,
+                queryStr);
 
         getResults(hits);
     }
@@ -83,10 +85,12 @@ public class FileSearcherImpl implements FileSearcher {
      * @throws IOException if error reading from disk
      */
     private void getResults(final ScoreDoc[] hits) throws IOException {
-        LOG.info("Search results:");
-        for (final ScoreDoc d : hits) {
-            final Document doc = searcher.doc(d.doc);
-            LOG.info(doc.get("filepath"));
+        if (hits.length > 0) {
+            LOG.info("Search results:");
+            for (final ScoreDoc d : hits) {
+                final Document doc = searcher.doc(d.doc);
+                LOG.info(doc.get("filepath"));
+            }
         }
     }
 
