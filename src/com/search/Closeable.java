@@ -13,5 +13,5 @@ public interface Closeable {
      *
      * @throws IOException if problems occur while closing
      */
-    public void close() throws IOException;
+    void close() throws IOException;
 }
