@@ -22,8 +22,7 @@ import com.search.util.LuceneUtils;
  * @author Jay Paulynice
  */
 public class FileSearcherImpl implements FileSearcher {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(FileSearcherImpl.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /** lucene file system directory */
     private FSDirectory fsDir;
@@ -32,25 +31,28 @@ public class FileSearcherImpl implements FileSearcher {
     private DirectoryReader iReader;
 
     /** lucene index searcher */
-    private final IndexSearcher searcher;
+    private IndexSearcher searcher;
 
-    /**
-     * @throws IOException if errors
-     */
-    public FileSearcherImpl() throws IOException {
-        fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
-        iReader = DirectoryReader.open(fsDir);
+    public FileSearcherImpl() {
+        init();
+    }
+
+    private void init() {
+        try {
+            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+            iReader = DirectoryReader.open(fsDir);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
         searcher = new IndexSearcher(iReader);
     }
 
     /*
      * (non-Javadoc)
-     *
      * @see com.search.FileSearcher#search(java.lang.String, int)
      */
     @Override
-    public void search(final String queryStr, final int maxHits)
-            throws IOException, ParseException {
+    public void search(final String queryStr, final int maxHits) {
         searchIndex(queryStr, maxHits);
     }
 
@@ -62,12 +64,11 @@ public class FileSearcherImpl implements FileSearcher {
      * @throws IOException if error reading from disk
      * @throws ParseException if error parsing queryStr
      */
-    private void searchIndex(final String queryStr, final int maxHits)
-            throws IOException, ParseException {
+    private void searchIndex(final String queryStr, final int maxHits) {
         final long now = System.currentTimeMillis();
 
-        final Query query = LuceneUtils.getQueryParser().parse(queryStr);
-        final ScoreDoc[] hits = searcher.search(query, null, maxHits).scoreDocs;
+        final Query query = parseQuery(queryStr);
+        final ScoreDoc[] hits = search(query, maxHits);
 
         LOG.info("Search took {} milli seconds.", System.currentTimeMillis()
                 - now);
@@ -78,24 +79,49 @@ public class FileSearcherImpl implements FileSearcher {
         getResults(hits);
     }
 
+    private ScoreDoc[] search(final Query query, final int maxHits) {
+        ScoreDoc[] hits = null;
+        try {
+            hits = searcher.search(query, null, maxHits).scoreDocs;
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+        return hits;
+    }
+
+    private Query parseQuery(final String queryStr) {
+        Query query = null;
+        try {
+            query = LuceneUtils.getQueryParser().parse(queryStr);
+        } catch (final ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return query;
+    }
+
     /**
      * Get search results
      *
      * @param hits results array
      * @throws IOException if error reading from disk
      */
-    private void getResults(final ScoreDoc[] hits) throws IOException {
+    private void getResults(final ScoreDoc[] hits) {
         if (hits.length > 0) {
             LOG.info("Search results:");
             for (final ScoreDoc d : hits) {
-                final Document doc = searcher.doc(d.doc);
-                LOG.info(doc.get("filepath"));
+                Document doc;
+                try {
+                    doc = searcher.doc(d.doc);
+                    LOG.info(doc.get("filepath"));
+                } catch (final IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         closeIndexReader();
         closeFSDirectory();
     }
@@ -105,11 +131,14 @@ public class FileSearcherImpl implements FileSearcher {
      *
      * @throws IOException
      */
-    private void closeIndexReader() throws IOException {
+    private void closeIndexReader() {
         if (iReader != null) {
             LOG.info("closing lucene index reader...");
-            iReader.close();
-            iReader = null;
+            try {
+                iReader.close();
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -122,7 +151,6 @@ public class FileSearcherImpl implements FileSearcher {
         if (fsDir != null) {
             LOG.info("closing FSDirectory...");
             fsDir.close();
-            fsDir = null;
         }
     }
 }

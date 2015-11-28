@@ -1,8 +1,5 @@
 package com.search;
 
-import java.io.IOException;
-
-import org.apache.lucene.queryparser.classic.ParseException;
 
 /**
  * Simple interface for searching a lucene index directory
@@ -16,9 +13,6 @@ public interface FileSearcher extends Closeable {
      *
      * @param queryStr string to search for
      * @param maxHits number of results to return
-     * @throws IOException if problems occur while processing a file
-     * @throws ParseException if unable to parse the query
      */
-    void search(final String queryStr, final int maxHits) throws IOException,
-    ParseException;
+    void search(final String queryStr, final int maxHits);
 }

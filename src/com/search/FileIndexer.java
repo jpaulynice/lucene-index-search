@@ -1,6 +1,5 @@
 package com.search;
 
-import java.io.IOException;
 
 /**
  * Simple interface for indexing text files in a directory.
@@ -15,7 +14,6 @@ public interface FileIndexer extends Closeable {
      *
      * @param dataDir the top level directory to index
      * @param suffix the file type (.java, .txt, etc...)
-     * @throws IOException if problems occur while processing a file
      */
-    void index(String dataDir, String suffix) throws IOException;
+    void index(String dataDir, String suffix);
 }

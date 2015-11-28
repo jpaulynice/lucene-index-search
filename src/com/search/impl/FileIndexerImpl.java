@@ -19,8 +19,7 @@ import com.search.util.LuceneUtils;
  * @author Jay Paulynice
  */
 public class FileIndexerImpl implements FileIndexer {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(FileIndexerImpl.class);
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /** lucene index writer */
     private IndexWriter iWriter;
@@ -28,22 +27,25 @@ public class FileIndexerImpl implements FileIndexer {
     /** lucene file system directory */
     private FSDirectory fsDir;
 
-    /**
-     * @throws IOException if errors
-     */
-    public FileIndexerImpl() throws IOException {
-        fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
-        iWriter = new IndexWriter(fsDir, LuceneUtils.CONFIG);
+    public FileIndexerImpl() {
+        init();
+    }
+
+    private void init() {
+        try {
+            fsDir = FSDirectory.open(new File(LuceneUtils.LUCENE_DIR));
+            iWriter = new IndexWriter(fsDir, LuceneUtils.CONFIG);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /*
      * (non-Javadoc)
-     *
      * @see com.search.FileIndexer#index(java.lang.String, java.lang.String)
      */
     @Override
-    public void index(final String dirToIndex, final String suffix)
-            throws IOException {
+    public void index(final String dirToIndex, final String suffix) {
         final long now = System.currentTimeMillis();
 
         indexDirectory(new File(dirToIndex), suffix);
@@ -59,8 +61,7 @@ public class FileIndexerImpl implements FileIndexer {
      * @param suffix the file type
      * @throws IOException if errors trying to read file
      */
-    private void indexDirectory(final File dataDir, final String suffix)
-            throws IOException {
+    private void indexDirectory(final File dataDir, final String suffix) {
         final File[] files = dataDir.listFiles();
         for (final File f : files) {
             if (f.isDirectory()) {
@@ -78,19 +79,23 @@ public class FileIndexerImpl implements FileIndexer {
      * @param suffix the file type
      * @throws IOException if errors trying to read file
      */
-    private void indexFile(final File f, final String suffix)
-            throws IOException {
+    private void indexFile(final File f, final String suffix) {
         if (f.isHidden() || f.isDirectory() || !f.canRead() || !f.exists()
                 || (suffix != null && !f.getName().endsWith(suffix))) {
             return;
         }
-        LOG.info("Indexing file: {}", f.getCanonicalPath());
-        final Document doc = DocumentUtil.fileToLuceneDoc(f);
-        iWriter.addDocument(doc);
+
+        try {
+            LOG.info("Indexing file: {}", f.getCanonicalPath());
+            final Document doc = DocumentUtil.fileToLuceneDoc(f);
+            iWriter.addDocument(doc);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         closeIndexWriter();
         closeFSDirectory();
     }
@@ -100,11 +105,14 @@ public class FileIndexerImpl implements FileIndexer {
      *
      * @throws IOException
      */
-    private void closeIndexWriter() throws IOException {
+    private void closeIndexWriter() {
         if (iWriter != null) {
             LOG.info("Shutting down index writer...");
-            iWriter.close();
-            iWriter = null;
+            try {
+                iWriter.close();
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -117,7 +125,6 @@ public class FileIndexerImpl implements FileIndexer {
         if (fsDir != null) {
             LOG.info("closing FSDirectory...");
             fsDir.close();
-            fsDir = null;
         }
     }
 }
