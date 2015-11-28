@@ -18,5 +18,5 @@ public interface FileIndexer extends Closeable {
      * @param suffix the file type (.java, .txt, etc...)
      * @throws IOException if problems occur while processing a file
      */
-    public void index(String dataDir, String suffix) throws IOException;
+    void index(String dataDir, String suffix) throws IOException;
 }
