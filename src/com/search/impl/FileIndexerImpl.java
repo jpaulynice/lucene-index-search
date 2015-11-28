@@ -85,6 +85,10 @@ public class FileIndexerImpl implements FileIndexer {
             return;
         }
 
+        index(f);
+    }
+    
+    private void index(final File f){
         try {
             LOG.info("Indexing file: {}", f.getCanonicalPath());
             final Document doc = DocumentUtil.fileToLuceneDoc(f);
