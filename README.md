@@ -26,7 +26,7 @@ public class Indexer {
 }
 ```
 
-Then using we search for "lucene" and list the file paths that match our query.
+Then search for "lucene" and list the file paths that match our query.
 
 ```java
 package com.search.demo;
