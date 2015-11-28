@@ -3,7 +3,7 @@ Lucene-Index-Search-Example
 
 This is a simple example of how to use apache lucene to index and search a directory.
 
-Currently, the application is set to index files ending in "java" which can be changed in the main method of Indexer.java
+Currently, the application is set to index files ending in `java` which can be changed in the main method of Indexer.java
 ```java
 package com.search.demo;
 
