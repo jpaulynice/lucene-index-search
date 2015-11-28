@@ -15,9 +15,8 @@ public class Indexer {
      * Main method to index directory
      *
      * @param args
-     * @throws Exception
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args){
         final String dirToIndex = "/Users/julespaulynice/Documents/workspace";
         final String suffix = "java";
 
@@ -40,9 +39,8 @@ public class Searcher {
      * Main method to search directory
      *
      * @param args
-     * @throws Exception
      */
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         final String query = "lucene";
         final int hits = 100;
 
