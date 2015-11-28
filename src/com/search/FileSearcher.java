@@ -20,6 +20,6 @@ public interface FileSearcher extends Closeable {
      * @throws IOException if problems occur while processing a file
      * @throws ParseException if unable to parse the query
      */
-    public void search(final String queryStr, final int maxHits)
+    void search(final String queryStr, final int maxHits)
             throws IOException, ParseException;
 }
