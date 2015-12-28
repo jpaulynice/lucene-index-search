@@ -70,13 +70,20 @@ public class FileSearcherImpl implements FileSearcher {
         final Query query = parseQuery(queryStr);
         final ScoreDoc[] hits = search(query, maxHits);
 
-        LOG.info("Search took {} milli seconds.", System.currentTimeMillis()
-                - now);
+        LOG.info("Search took {} milli seconds...found {} documents matching the query: {}", 
+            System.currentTimeMillis() - now, hits.length, queryStr);
 
-        LOG.info("Found {} documents matching the query: {}", hits.length,
-                queryStr);
-
-        getResults(hits);
+        printSearchResults(hits);
+    }
+    
+    private Query parseQuery(final String queryStr) {
+        Query query = null;
+        try {
+            query = LuceneUtils.getQueryParser().parse(queryStr);
+        } catch (final ParseException e) {
+            throw new RuntimeException(e);
+        }
+        return query;
     }
 
     private ScoreDoc[] search(final Query query, final int maxHits) {
@@ -89,29 +96,18 @@ public class FileSearcherImpl implements FileSearcher {
         return hits;
     }
 
-    private Query parseQuery(final String queryStr) {
-        Query query = null;
-        try {
-            query = LuceneUtils.getQueryParser().parse(queryStr);
-        } catch (final ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return query;
-    }
-
     /**
-     * Get search results
+     * Log the search results
      *
      * @param hits results array
      * @throws IOException if error reading from disk
      */
-    private void getResults(final ScoreDoc[] hits) {
+    private void printSearchResults(final ScoreDoc[] hits) {
         if (hits.length > 0) {
             LOG.info("Search results:");
             for (final ScoreDoc d : hits) {
-                Document doc;
                 try {
-                    doc = searcher.doc(d.doc);
+                    Document doc = searcher.doc(d.doc);
                     LOG.info(doc.get("filepath"));
                 } catch (final IOException e) {
                     throw new RuntimeException(e);
